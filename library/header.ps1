@@ -780,7 +780,7 @@ class selection {
                 break
             }
             if($quit){
-                $out=""
+                $out=@{}
                 break
             }
 
@@ -824,7 +824,7 @@ class selection {
             $lastpage=$page
         }
 
-        $cy=$currentpos[1]+1;$cx=$currentpos[0]
+        $cy=$currentpos[1]+1;$cx=$currentpos[0]+1
         w("$e[$($cy-$sizeoffset);$cx"+"f$e[s"+("$e[K$e[1B"*($totalspace))+"$e[u") # %% clear selection ui
 
         #w("$e[u")
@@ -934,15 +934,23 @@ cd ".."
 cd $pd
 #>
 
-$f=@(@{name="a";value="1"})
+#$f=@(@{name="a";value="1"})
 
-$t='https://api.github.com/repos/ttewi/pwsh/contents/public'
-foreach($h in $json.parse((curl.exe -s $t)).syncroot ){
-    $h
-    "#"
+<#
+$t='https://api.github.com/repos/ttewi/pwsh/contents'
+$t=$json.parse((curl.exe -s $t)).syncroot
+$i=0
+foreach($h in $t){
+    $m=@{}
+    foreach($q in $h.psobject.properties){
+        $a=$q.name;$b=$q.value;
+        $m[$a]=$b
+    }
+    $t[$i++]=$m
 }
 
-
+$f=$t
+#>
 
 
 w($pcd.pull()[0].data.teic+"\n")
@@ -956,11 +964,77 @@ w("$e[19A$e[56C") # = 19,56
 
 
 #$t=[selection]::new($selection).start()
-$t=([selection]::new($f).start("script",12))
+$previousloc=@()
+$previousloc+=$loc='https://api.github.com/repos/ttewi/pwsh/contents'
+for(;;){
+    $f=$null
+    $tt=$json.parse((curl.exe -s $loc)).syncroot
+    $i=0;$g=@()
+    foreach($h in $tt){
+        $m=@{}
+        foreach($q in $h.psobject.properties){
+            $a=$q.name;$b=$q.value;
+            $m[$a]=$b
+        }
+        $g+=$m
+        $i++
+    }
+
+    $f=$g
+
+    $t=([selection]::new($f).start("script",12))
+
+    $break=$false
+    $err=$false
+
+
+    if($t.count-eq0){
+        $err="error"
+        break
+    }
+
+    $type=$t.type
+    $name=$t.name
+
+
+    switch ($type){
+        default {
+            $loc=$previousloc[-1]
+            $l=$previousloc.length
+            if($l-ne1){
+                $previousloc=$previousloc[0..($l-2)]
+            }
+            sleep -milliseconds 400
+        }
+        "dir" {
+            $previousloc+=$loc
+            $loc=$t.url
+            sleep -milliseconds 400
+        }
+        "file" {
+            if(!($name-match'\.ps1$')){
+                continue
+            }
+            $break=$true
+        }
+    }
+
+    
+    #if($type-eq'file'-and$name-match'\.ps1$'){break}
+
+    if($break){break}
+}
 
 w("$e[$($sy+1);$sx"+"f")
 
-$t
+if($err){
+    $err
+}else{
+    $t
+}
+
+
+#iex((curl.exe -s $t.download_url)-join"`n")
 
 #iex("cls;"+(gc -raw ([selection]::new($f).start("script")).value))
 #iex("cls;&'"+([selection]::new($f).start("script")).value+"'")
