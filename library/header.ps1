@@ -965,7 +965,8 @@ w("$e[19A$e[56C") # = 19,56
 
 #$t=[selection]::new($selection).start()
 $previousloc=@()
-$previousloc+=$loc='https://api.github.com/repos/ttewi/pwsh/contents'
+$previousloc+=($loc='https://api.github.com/repos/ttewi/pwsh/contents')
+
 for(;;){
     $f=$null
     $tt=$json.parse((curl.exe -s $loc)).syncroot
@@ -982,16 +983,19 @@ for(;;){
 
     $f=$g
 
+    $t=@{}
     $t=([selection]::new($f).start("script",12))
 
     $break=$false
     $err=$false
 
 
+    <#
     if($t.count-eq0){
-        $err="error"
+        $err=$loc
         break
     }
+    #>
 
     $type=$t.type
     $name=$t.name
@@ -1034,7 +1038,7 @@ if($err){
 }
 
 
-#iex((curl.exe -s $t.download_url)-join"`n")
+iex((curl.exe -s $t.download_url)-join"`n")
 
 #iex("cls;"+(gc -raw ([selection]::new($f).start("script")).value))
 #iex("cls;&'"+([selection]::new($f).start("script")).value+"'")
