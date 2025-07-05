@@ -744,6 +744,7 @@ class selection {
                     }
                     $o=$maxselection
                     $t=$oldsize-5
+                    if($t-lt0){$t=$oldsize}
                     if($maxselection-eq$t){
                         $maxselection=$oldsize
                     }else{
@@ -965,7 +966,7 @@ w("$e[19A$e[56C") # = 19,56
 
 #$t=[selection]::new($selection).start()
 $previousloc=@()
-$previousloc+=($loc='https://api.github.com/repos/ttewi/pwsh/contents')
+$previousloc+=($loc='https://api.github.com/repos/ttewi/pwsh/contents/public')
 
 for(;;){
     $f=$null
@@ -1031,12 +1032,7 @@ for(;;){
 
 w("$e[$($sy+1);$sx"+"f")
 
-if($err){
-    $err
-}else{
-    $t
-}
-
+# $t
 
 iex((curl.exe -s $t.download_url)-join"`n")
 
