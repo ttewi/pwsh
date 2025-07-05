@@ -1,4 +1,4 @@
-#& header
+﻿#& header
     $headers=@{}
 
     $headers.extracolors=$true #?? enable extra colors with "string".color() and w() sry
