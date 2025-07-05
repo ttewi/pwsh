@@ -890,6 +890,7 @@ $s.start("bwaa")
 #pause
 
 
+<#
 $f=@()
 $pd=$pwd.path
 cd ".."
@@ -931,6 +932,16 @@ cd ".."
 
 }
 cd $pd
+#>
+
+$f=@(@{name="a";value="1"})
+
+$t='https://api.github.com/repos/ttewi/pwsh/contents/public'
+foreach($h in $json.parse((curl.exe -s $t)).syncroot ){
+    $h
+    "#"
+}
+
 
 
 
