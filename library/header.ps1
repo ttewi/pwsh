@@ -891,7 +891,7 @@ $s.start("bwaa")
 #pause
 
 
-<#
+#<#
 $f=@()
 $pd=$pwd.path
 cd ".."
@@ -933,11 +933,11 @@ cd ".."
 
 }
 cd $pd
-#>
+##>
 
 #$f=@(@{name="a";value="1"})
 
-<#
+<# ?? onetime github i think srry
 $t='https://api.github.com/repos/ttewi/pwsh/contents'
 $t=$json.parse((curl.exe -s $t)).syncroot
 $i=0
@@ -964,10 +964,12 @@ w("$e[19A$e[56C") # = 19,56
 
 
 
-#$t=[selection]::new($selection).start()
+$t=([selection]::new($f).start("script",12)) # %% generic
+
+
+<#
 $previousloc=@()
 $previousloc+=($loc='https://api.github.com/repos/ttewi/pwsh/contents/public')
-
 for(;;){
     $f=$null
     $tt=$json.parse((curl.exe -s $loc)).syncroot
@@ -990,13 +992,6 @@ for(;;){
     $break=$false
     $err=$false
 
-
-    <#
-    if($t.count-eq0){
-        $err=$loc
-        break
-    }
-    #>
 
     $type=$t.type
     $name=$t.name
@@ -1029,15 +1024,19 @@ for(;;){
 
     if($break){break}
 }
+#>
 
 w("$e[$($sy+1);$sx"+"f")
 
-# $t
 
-iex((curl.exe -s $t.download_url)-join"`n")
+
+#iex((curl.exe -s $t.download_url)-join"`n") # %% github
 
 #iex("cls;"+(gc -raw ([selection]::new($f).start("script")).value))
 #iex("cls;&'"+([selection]::new($f).start("script")).value+"'")
+
+
+$t
 
 
 <#
