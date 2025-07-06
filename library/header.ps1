@@ -1040,6 +1040,11 @@ iex((curl.exe -s $t.download_url)-join"`n")
 #iex("cls;&'"+([selection]::new($f).start("script")).value+"'")
 
 
+<#
+# !@ pcd teic.ascii
+# !@ header cd on iex
+
+#>
 
 
 
